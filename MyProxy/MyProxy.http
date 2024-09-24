@@ -1,0 +1,33 @@
+@MyProxy_HostAddress = http://localhost:5121
+
+GET {{MyProxy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+
+
+###
+# curl -X 'POST' 
+#  'http://localhost:5079/api/Todo' 
+#  -H 'accept: text/plain' 
+#  -H 'Content-Type: application/json' 
+#  -d '{
+#  "title": "string",
+#  "description": "string",
+#  "dueTime": "2024-09-19T10:07:15.280Z"
+#}'
+POST http://localhost:5121/api/Todo
+accept: text/plain
+Content-Type: application/json
+
+{
+  "title": "test",
+  "description": "test1",
+  "dueTime": "2024-09-19T10:07:15.280Z"
+}
+
+###
+
+GET http://localhost:5121/api/Todo
+accept: text/plain
+Content-Type: application/json
+
