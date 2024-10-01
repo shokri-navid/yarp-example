@@ -1,5 +1,7 @@
+using System.Net;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using MyProxy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var t = new FixedWindowRateLimiter(new FixedWindowRateLimiterOptions());
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("fixed", opt =>
@@ -21,7 +22,12 @@ builder.Services.AddRateLimiter(options =>
 });
 
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .ConfigureHttpClient((context, handler) =>
+    {
+        handler.AutomaticDecompression = DecompressionMethods.All;
+    })
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .AddTransforms<AddTodoTransformerProvider>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
